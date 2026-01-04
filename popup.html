@@ -3,58 +3,83 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Screen Recorder</title>
+    <title>Screen Tools</title>
     <style>
-        /* CSS Custom Properties - Design System */
+        /* Paean Design System */
         :root {
-            /* Colors - Material 3 Expressive */
-            --primary: #6750A4;
-            --primary-container: #EADDFF;
-            --on-primary: #FFFFFF;
-            --on-primary-container: #21005D;
-            --surface: #FEF7FF;
-            --surface-variant: #E7E0EC;
-            --on-surface: #1D1B20;
-            --on-surface-variant: #49454F;
-            --outline: #79747E;
-            --outline-variant: #CAC4D0;
-            --background: #FEF7FF;
-            --on-background: #1D1B20;
-            --error: #BA1A1A;
-            --error-container: #FFDAD6;
-            --on-error: #FFFFFF;
+            /* Primary - Paean Blue */
+            --primary-400: #22d3ee;
+            --primary-500: #06b6d4;
+            --primary-600: #0891b2;
+            --primary-700: #0e7490;
+            
+            /* Neutral */
+            --neutral-50: #fafafa;
+            --neutral-100: #f5f5f5;
+            --neutral-200: #e5e5e5;
+            --neutral-300: #d4d4d4;
+            --neutral-400: #a3a3a3;
+            --neutral-500: #737373;
+            --neutral-600: #525252;
+            --neutral-700: #404040;
+            --neutral-800: #262626;
+            --neutral-900: #171717;
+            --neutral-950: #0a0a0a;
+            
+            /* Semantic */
+            --error-500: #ef4444;
+            --success-500: #10b981;
+            
+            /* Theme tokens */
+            --bg-base: #ffffff;
+            --bg-subtle: var(--neutral-50);
+            --bg-card: #ffffff;
+            --text-primary: var(--neutral-900);
+            --text-secondary: var(--neutral-600);
+            --text-tertiary: var(--neutral-500);
+            --border-default: var(--neutral-200);
+            --border-subtle: var(--neutral-100);
             
             /* Typography */
-            --font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            --font-weight-medium: 500;
-            --font-weight-semibold: 600;
-            --font-weight-bold: 700;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
             
             /* Spacing */
-            --spacing-xs: 4px;
-            --spacing-sm: 8px;
-            --spacing-md: 16px;
-            --spacing-lg: 24px;
-            --spacing-xl: 32px;
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 12px;
+            --space-lg: 16px;
+            --space-xl: 24px;
             
-            /* Border Radius */
+            /* Border radius */
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 16px;
-            --radius-xl: 20px;
             
             /* Shadows */
-            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-            --shadow-md: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-            --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+            --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
             
             /* Transitions */
-            --transition-fast: 150ms cubic-bezier(0.4, 0.0, 0.2, 1);
-            --transition-normal: 300ms cubic-bezier(0.4, 0.0, 0.2, 1);
-            --transition-slow: 500ms cubic-bezier(0.4, 0.0, 0.2, 1);
+            --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+            --transition-normal: 200ms cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Base Styles */
+        /* Dark mode */
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-base: var(--neutral-950);
+                --bg-subtle: var(--neutral-900);
+                --bg-card: var(--neutral-900);
+                --text-primary: var(--neutral-50);
+                --text-secondary: var(--neutral-400);
+                --text-tertiary: var(--neutral-500);
+                --border-default: var(--neutral-800);
+                --border-subtle: var(--neutral-900);
+            }
+        }
+
+        /* Base styles */
         * {
             margin: 0;
             padding: 0;
@@ -63,10 +88,10 @@
 
         body {
             width: 320px;
-            min-height: 400px;
-            font-family: var(--font-family);
-            background: var(--background);
-            color: var(--on-background);
+            min-height: 360px;
+            font-family: var(--font-sans);
+            background: var(--bg-base);
+            color: var(--text-primary);
             line-height: 1.5;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
@@ -74,143 +99,167 @@
 
         /* Container */
         .container {
-            padding: var(--spacing-lg);
+            padding: var(--space-xl);
             display: flex;
             flex-direction: column;
-            gap: var(--spacing-lg);
-            min-height: 100vh;
+            gap: var(--space-lg);
         }
 
         /* Header */
         .header {
             text-align: center;
-            padding: var(--spacing-md) 0;
+            padding-bottom: var(--space-sm);
         }
 
-        .header h1 {
-            font-size: 24px;
-            font-weight: var(--font-weight-bold);
-            color: var(--primary);
-            margin-bottom: var(--spacing-xs);
+        .header-title {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: var(--spacing-sm);
+            gap: var(--space-sm);
+            margin-bottom: var(--space-xs);
         }
 
-        .header .subtitle {
-            font-size: 14px;
-            color: var(--on-surface-variant);
-            font-weight: var(--font-weight-medium);
+        .header-title h1 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
         }
 
-        /* Main Button */
-        .primary-button {
-            background: var(--primary);
-            color: var(--on-primary);
-            border: none;
+        .header-icon {
+            width: 28px;
+            height: 28px;
+            color: var(--primary-500);
+        }
+
+        .header-subtitle {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Action buttons grid */
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-md);
+        }
+
+        .action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            padding: var(--space-lg) var(--space-md);
+            background: var(--bg-card);
+            border: 1px solid var(--border-default);
             border-radius: var(--radius-md);
-            padding: var(--spacing-md) var(--spacing-lg);
-            font-size: 16px;
-            font-weight: var(--font-weight-medium);
             cursor: pointer;
-            transition: all var(--transition-fast);
-            box-shadow: var(--shadow-sm);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: var(--spacing-sm);
-            position: relative;
-            overflow: hidden;
+            transition: all var(--transition-normal);
+            min-height: 100px;
         }
 
-        .primary-button:hover {
-            background: color-mix(in srgb, var(--primary) 85%, black);
+        .action-btn:hover {
+            border-color: var(--primary-500);
             box-shadow: var(--shadow-md);
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
 
-        .primary-button:active {
+        .action-btn:active {
             transform: translateY(0);
             box-shadow: var(--shadow-sm);
         }
 
-        .primary-button:focus-visible {
-            outline: 2px solid var(--outline);
+        .action-btn:focus-visible {
+            outline: 2px solid var(--primary-500);
             outline-offset: 2px;
         }
 
-        /* Ripple Effect */
-        .primary-button::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
+        .action-btn-icon {
+            width: 32px;
+            height: 32px;
+            color: var(--primary-500);
         }
 
-        .primary-button:active::after {
-            width: 300px;
-            height: 300px;
-        }
-
-        /* Info Cards */
-        .info-card {
-            background: var(--surface-variant);
-            border-radius: var(--radius-md);
-            padding: var(--spacing-md);
-            border: 1px solid var(--outline-variant);
-        }
-
-        .info-card h3 {
+        .action-btn-label {
             font-size: 14px;
-            font-weight: var(--font-weight-semibold);
-            color: var(--on-surface);
-            margin-bottom: var(--spacing-sm);
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .action-btn-desc {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            text-align: center;
+        }
+
+        /* Screenshot button special styling */
+        .action-btn.screenshot {
+            background: linear-gradient(135deg, var(--primary-500), var(--primary-600));
+            border-color: transparent;
+            color: white;
+        }
+
+        .action-btn.screenshot .action-btn-icon,
+        .action-btn.screenshot .action-btn-label,
+        .action-btn.screenshot .action-btn-desc {
+            color: white;
+        }
+
+        .action-btn.screenshot:hover {
+            background: linear-gradient(135deg, var(--primary-400), var(--primary-500));
+            border-color: transparent;
+        }
+
+        /* Info card */
+        .info-card {
+            background: var(--bg-subtle);
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .info-card-header {
             display: flex;
             align-items: center;
-            gap: var(--spacing-xs);
+            gap: var(--space-sm);
+            margin-bottom: var(--space-sm);
         }
 
-        .info-card p {
+        .info-card-icon {
+            width: 16px;
+            height: 16px;
+            color: var(--primary-500);
+        }
+
+        .info-card-title {
             font-size: 13px;
-            color: var(--on-surface-variant);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .info-card-content {
+            font-size: 12px;
+            color: var(--text-secondary);
             line-height: 1.6;
         }
 
-        .info-card.stepper {
-            background: var(--primary-container);
-            border-color: var(--primary);
-        }
-
-        .info-card.stepper h3 {
-            color: var(--on-primary-container);
-        }
-
-        .info-card.stepper p {
-            color: var(--on-primary-container);
-            opacity: 0.8;
-        }
-
-        .info-card.tip {
-            background: #E8F5E9;
-            border-color: #4CAF50;
-        }
-
-        .info-card.tip h3 {
-            color: #2E7D32;
+        .info-card-content kbd {
+            display: inline-block;
+            padding: 2px 6px;
+            font-size: 11px;
+            font-family: var(--font-sans);
+            background: var(--bg-card);
+            border: 1px solid var(--border-default);
+            border-radius: 4px;
+            box-shadow: var(--shadow-sm);
         }
 
         /* Animations */
         @keyframes fadeIn {
             from {
                 opacity: 0;
-                transform: translateY(10px);
+                transform: translateY(8px);
             }
             to {
                 opacity: 1;
@@ -224,81 +273,109 @@
         }
 
         .container > *:nth-child(1) { animation-delay: 0ms; }
-        .container > *:nth-child(2) { animation-delay: 100ms; }
-        .container > *:nth-child(3) { animation-delay: 200ms; }
-        .container > *:nth-child(4) { animation-delay: 300ms; }
-        .container > *:nth-child(5) { animation-delay: 400ms; }
+        .container > *:nth-child(2) { animation-delay: 50ms; }
+        .container > *:nth-child(3) { animation-delay: 100ms; }
 
-        /* Accessibility */
-        @media (prefers-reduced-motion: reduce) {
-            * {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-            }
+        /* Status toast */
+        .status-toast {
+            position: fixed;
+            bottom: var(--space-lg);
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--neutral-900);
+            color: white;
+            padding: var(--space-sm) var(--space-lg);
+            border-radius: var(--radius-sm);
+            font-size: 13px;
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            transition: all var(--transition-normal);
+            z-index: 100;
+        }
+
+        .status-toast.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+        }
+
+        .status-toast.success {
+            background: var(--success-500);
+        }
+
+        .status-toast.error {
+            background: var(--error-500);
         }
 
         @media (prefers-color-scheme: dark) {
-            :root {
-                --primary: #D0BCFF;
-                --primary-container: #4F378B;
-                --on-primary: #381E72;
-                --on-primary-container: #EADDFF;
-                --surface: #121212;
-                --surface-variant: #2C2C2C;
-                --on-surface: #E6E1E5;
-                --on-surface-variant: #CAC4D0;
-                --outline: #938F99;
-                --outline-variant: #2C2C2C;
-                --background: #121212;
-                --on-background: #E6E1E5;
+            .status-toast {
+                background: var(--neutral-100);
+                color: var(--neutral-900);
+            }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                transition-duration: 0.01ms !important;
             }
         }
     </style>
 </head>
 <body>
-    <main class="container" role="dialog" aria-modal="true" aria-label="Screen Recorder">
+    <main class="container" role="main">
         <header class="header">
-            <h1>
-                <span aria-hidden="true">🎥</span>
-                Screen Recorder
-            </h1>
-            <p class="subtitle">Professional screen recording</p>
+            <div class="header-title">
+                <!-- Camera/Record icon -->
+                <svg class="header-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                    <circle cx="12" cy="13" r="4"/>
+                </svg>
+                <h1>Screen Tools</h1>
+            </div>
+            <p class="header-subtitle">Capture and record with ease</p>
         </header>
 
-        <button 
-            id="openWindow" 
-            class="primary-button"
-            aria-label="Start screen recording session"
-            type="button"
-        >
-            <span aria-hidden="true">▶</span>
-            Start Recording
-        </button>
+        <div class="action-grid" role="group" aria-label="Capture actions">
+            <button id="screenshotBtn" class="action-btn screenshot" type="button" aria-label="Take screenshot">
+                <!-- Screenshot icon -->
+                <svg class="action-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <polyline points="21 15 16 10 5 21"/>
+                </svg>
+                <span class="action-btn-label">Screenshot</span>
+                <span class="action-btn-desc">Capture this page</span>
+            </button>
 
-        <section class="info-card stepper" aria-labelledby="how-it-works">
-            <h3 id="how-it-works">
-                <span aria-hidden="true">📋</span>
-                How it works
-            </h3>
-            <p>
-                1. Click "Start Recording"<br>
-                2. Select screen, window, or tab<br>
-                3. Recorder minimizes automatically<br>
-                4. Record your content<br>
-                5. Click recorder in taskbar to stop
-            </p>
+            <button id="recordBtn" class="action-btn" type="button" aria-label="Start recording">
+                <!-- Record icon -->
+                <svg class="action-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <circle cx="12" cy="12" r="3" fill="currentColor"/>
+                </svg>
+                <span class="action-btn-label">Record</span>
+                <span class="action-btn-desc">Screen recording</span>
+            </button>
+        </div>
+
+        <section class="info-card" aria-labelledby="shortcuts-title">
+            <div class="info-card-header">
+                <!-- Keyboard icon -->
+                <svg class="info-card-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="4" width="20" height="16" rx="2" ry="2"/>
+                    <path d="M6 8h.001M10 8h.001M14 8h.001M18 8h.001M8 12h.001M12 12h.001M16 12h.001M7 16h10"/>
+                </svg>
+                <h2 id="shortcuts-title" class="info-card-title">Keyboard Shortcuts</h2>
+            </div>
+            <div class="info-card-content">
+                <kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>X</kbd> Screenshot<br>
+                <kbd>⌘</kbd> + <kbd>⇧</kbd> + <kbd>S</kbd> Stop recording
+            </div>
         </section>
 
-        <section class="info-card tip" aria-labelledby="pro-tip">
-            <h3 id="pro-tip">
-                <span aria-hidden="true">💡</span>
-                Pro Tip
-            </h3>
-            <p>
-                Recording stops instantly when you click the recorder window in your taskbar. No need to find the stop button!
-            </p>
-        </section>
+        <div id="statusToast" class="status-toast" role="status" aria-live="polite"></div>
     </main>
 
     <script src="popup.js"></script>

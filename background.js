@@ -1,13 +1,11 @@
-// Simple background worker - just handles downloads
-console.log("Background service worker loaded.");
+// Screen Tools - Background Service Worker
+console.log("Screen Tools background service worker loaded.");
 
 // State tracking
 let isRecorderWindowActive = false;
 
 // Listen for messages
 chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
-  // console.log('Background received:', msg.type);
-
   if (msg.type === 'download-recording') {
     console.log('Downloading file, size:', msg.size, 'bytes');
 
@@ -51,7 +49,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 });
 
 // Listen for keyboard commands
-chrome.commands.onCommand.addListener((command) => {
+chrome.commands.onCommand.addListener(async (command) => {
   console.log('Command received:', command);
 
   if (command === 'stop-recording') {
@@ -59,5 +57,38 @@ chrome.commands.onCommand.addListener((command) => {
     chrome.runtime.sendMessage({ type: 'command-stop' }).catch(() => {
       // Ignore errors if no listeners (app closed)
     });
+  }
+
+  if (command === 'take-screenshot') {
+    try {
+      // Get active tab
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      
+      if (!tab) {
+        console.error('No active tab found');
+        return;
+      }
+
+      // Capture the visible tab
+      const dataUrl = await chrome.tabs.captureVisibleTab(null, {
+        format: 'png',
+        quality: 100
+      });
+
+      // Generate filename with timestamp
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+      const filename = `screenshot-${timestamp}.png`;
+
+      // Download the screenshot
+      await chrome.downloads.download({
+        url: dataUrl,
+        filename: filename,
+        saveAs: false
+      });
+
+      console.log('Screenshot saved:', filename);
+    } catch (error) {
+      console.error('Screenshot error:', error);
+    }
   }
 });

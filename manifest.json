@@ -1,12 +1,13 @@
 {
-  "name": "Screen Recorder - Professional Screen Recording",
-  "short_name": "Screen Recorder",
-  "description": "Professional screen recording for Chrome. Record screen, windows, or tabs with MP4 support, auto-minimize, and invisible recording. Perfect for tutorials, presentations, and demos.",
-  "version": "1.4.0",
+  "name": "Screen Tools - Capture & Record",
+  "short_name": "Screen Tools",
+  "description": "Professional screen capture suite for Chrome. Screenshot pages instantly or record screen, windows, and tabs. Perfect for tutorials, demos, and documentation.",
+  "version": "1.5.0",
   "manifest_version": 3,
   "permissions": [
     "desktopCapture",
-    "downloads"
+    "downloads",
+    "activeTab"
   ],
   "background": {
     "service_worker": "background.js"
@@ -14,12 +15,12 @@
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "icon.svg",
-      "32": "icon.svg",
-      "48": "icon.svg",
-      "128": "icon.svg"
+      "16": "icon16.png",
+      "32": "icon32.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
     },
-    "default_title": "Screen Recorder - Start Recording"
+    "default_title": "Screen Tools - Capture & Record"
   },
   "commands": {
     "stop-recording": {
@@ -28,12 +29,19 @@
         "mac": "Command+Shift+S"
       },
       "description": "Stop screen recording"
+    },
+    "take-screenshot": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+X",
+        "mac": "Command+Shift+X"
+      },
+      "description": "Take screenshot of current page"
     }
   },
   "icons": {
-    "16": "icon.svg",
-    "32": "icon.svg",
-    "48": "icon.svg",
-    "128": "icon.svg"
+    "16": "icon16.png",
+    "32": "icon32.png",
+    "48": "icon48.png",
+    "128": "icon128.png"
   }
 }

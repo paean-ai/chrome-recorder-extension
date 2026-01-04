@@ -1,7 +1,7 @@
 {
   "name": "screen-recorder-extension",
-  "version": "1.4.0",
-  "description": "A modern, professional screen recording Chrome extension with Material 3 Expressive design.",
+  "version": "1.5.0",
+  "description": "Professional screen capture and recording Chrome extension with Paean design system.",
   "main": "index.js",
   "scripts": {
     "build": "bun run clean && bun run build:dev",

@@ -1,4 +1,4 @@
-// Professional Screen Recorder
+// Screen Recorder - Professional Recording
 let recorder = null;
 let chunks = [];
 let activeStream = null;
@@ -15,14 +15,17 @@ function updateUI(recording, status) {
     recBtn.disabled = recording;
     stopBtn.disabled = !recording;
 
-    statusDiv.classList.remove('status-idle', 'status-recording', 'status-error');
+    statusDiv.classList.remove('status-idle', 'status-recording', 'status-error', 'status-success');
     
     if (status.includes('Error') || status.includes('Failed')) {
         statusDiv.classList.add('status-error');
         statusText.innerHTML = status;
+    } else if (status.includes('Saved') || status.includes('saved')) {
+        statusDiv.classList.add('status-success');
+        statusText.innerHTML = status;
     } else if (recording) {
         statusDiv.classList.add('status-recording');
-        statusText.innerHTML = '<div class="recording-indicator"><span class="recording-dot"></span>' + status + '</div>';
+        statusText.innerHTML = '<span class="recording-indicator"><span class="recording-dot"></span>' + status + '</span>';
     } else {
         statusDiv.classList.add('status-idle');
         statusText.innerHTML = status;
@@ -84,7 +87,8 @@ function cleanup() {
 // Download function
 function downloadRecording(blob, mimeType) {
     const extension = mimeType.includes('mp4') ? '.mp4' : '.webm';
-    const filename = `recording-${Date.now()}${extension}`;
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, -5);
+    const filename = `recording-${timestamp}${extension}`;
 
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -202,8 +206,8 @@ recBtn.onclick = async () => {
             // Download the recording
             downloadRecording(blob, mimeType);
 
-            updateUI(false, '✅ Saved!');
-            setTimeout(() => updateUI(false, 'Ready to Record'), 3000);
+            updateUI(false, 'Recording saved');
+            setTimeout(() => updateUI(false, 'Ready to record'), 3000);
 
             // Notify background
             chrome.runtime.sendMessage({ type: 'recorder-status', isRecording: false });
@@ -243,7 +247,7 @@ recBtn.onclick = async () => {
                 console.log('Keep alive');
             }, 5000);
 
-            updateUI(true, '🔴 Recording...');
+            updateUI(true, 'Recording...');
         }, 800);
 
     } catch (error) {
@@ -270,13 +274,13 @@ stopBtn.onclick = () => {
     if (recorder && recorder.state !== 'inactive') {
         recorder.stop();
     } else {
-        updateUI(false, 'Ready to Record');
+        updateUI(false, 'Ready to record');
     }
 };
 
 // Initialize
 console.log('Recorder loaded');
-updateUI(false, 'Ready to Record');
+updateUI(false, 'Ready to record');
 
 // Cleanup on close
 window.addEventListener('beforeunload', cleanup);
