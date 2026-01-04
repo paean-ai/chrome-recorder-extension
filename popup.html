@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Screen Recorder</title>
+    <style>
+        /* CSS Custom Properties - Design System */
+        :root {
+            /* Colors - Material 3 Expressive */
+            --primary: #6750A4;
+            --primary-container: #EADDFF;
+            --on-primary: #FFFFFF;
+            --on-primary-container: #21005D;
+            --surface: #FEF7FF;
+            --surface-variant: #E7E0EC;
+            --on-surface: #1D1B20;
+            --on-surface-variant: #49454F;
+            --outline: #79747E;
+            --outline-variant: #CAC4D0;
+            --background: #FEF7FF;
+            --on-background: #1D1B20;
+            --error: #BA1A1A;
+            --error-container: #FFDAD6;
+            --on-error: #FFFFFF;
+            
+            /* Typography */
+            --font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+            
+            /* Spacing */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            
+            /* Border Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            --shadow-md: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+            --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+            
+            /* Transitions */
+            --transition-fast: 150ms cubic-bezier(0.4, 0.0, 0.2, 1);
+            --transition-normal: 300ms cubic-bezier(0.4, 0.0, 0.2, 1);
+            --transition-slow: 500ms cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 320px;
+            min-height: 400px;
+            font-family: var(--font-family);
+            background: var(--background);
+            color: var(--on-background);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Container */
+        .container {
+            padding: var(--spacing-lg);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+            min-height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: var(--spacing-md) 0;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            font-weight: var(--font-weight-bold);
+            color: var(--primary);
+            margin-bottom: var(--spacing-xs);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+        }
+
+        .header .subtitle {
+            font-size: 14px;
+            color: var(--on-surface-variant);
+            font-weight: var(--font-weight-medium);
+        }
+
+        /* Main Button */
+        .primary-button {
+            background: var(--primary);
+            color: var(--on-primary);
+            border: none;
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md) var(--spacing-lg);
+            font-size: 16px;
+            font-weight: var(--font-weight-medium);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .primary-button:hover {
+            background: color-mix(in srgb, var(--primary) 85%, black);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .primary-button:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .primary-button:focus-visible {
+            outline: 2px solid var(--outline);
+            outline-offset: 2px;
+        }
+
+        /* Ripple Effect */
+        .primary-button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .primary-button:active::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Info Cards */
+        .info-card {
+            background: var(--surface-variant);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            border: 1px solid var(--outline-variant);
+        }
+
+        .info-card h3 {
+            font-size: 14px;
+            font-weight: var(--font-weight-semibold);
+            color: var(--on-surface);
+            margin-bottom: var(--spacing-sm);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .info-card p {
+            font-size: 13px;
+            color: var(--on-surface-variant);
+            line-height: 1.6;
+        }
+
+        .info-card.stepper {
+            background: var(--primary-container);
+            border-color: var(--primary);
+        }
+
+        .info-card.stepper h3 {
+            color: var(--on-primary-container);
+        }
+
+        .info-card.stepper p {
+            color: var(--on-primary-container);
+            opacity: 0.8;
+        }
+
+        .info-card.tip {
+            background: #E8F5E9;
+            border-color: #4CAF50;
+        }
+
+        .info-card.tip h3 {
+            color: #2E7D32;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container > * {
+            animation: fadeIn var(--transition-normal) ease-out;
+            animation-fill-mode: both;
+        }
+
+        .container > *:nth-child(1) { animation-delay: 0ms; }
+        .container > *:nth-child(2) { animation-delay: 100ms; }
+        .container > *:nth-child(3) { animation-delay: 200ms; }
+        .container > *:nth-child(4) { animation-delay: 300ms; }
+        .container > *:nth-child(5) { animation-delay: 400ms; }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary: #D0BCFF;
+                --primary-container: #4F378B;
+                --on-primary: #381E72;
+                --on-primary-container: #EADDFF;
+                --surface: #121212;
+                --surface-variant: #2C2C2C;
+                --on-surface: #E6E1E5;
+                --on-surface-variant: #CAC4D0;
+                --outline: #938F99;
+                --outline-variant: #2C2C2C;
+                --background: #121212;
+                --on-background: #E6E1E5;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="container" role="dialog" aria-modal="true" aria-label="Screen Recorder">
+        <header class="header">
+            <h1>
+                <span aria-hidden="true">🎥</span>
+                Screen Recorder
+            </h1>
+            <p class="subtitle">Professional screen recording</p>
+        </header>
+
+        <button 
+            id="openWindow" 
+            class="primary-button"
+            aria-label="Start screen recording session"
+            type="button"
+        >
+            <span aria-hidden="true">▶</span>
+            Start Recording
+        </button>
+
+        <section class="info-card stepper" aria-labelledby="how-it-works">
+            <h3 id="how-it-works">
+                <span aria-hidden="true">📋</span>
+                How it works
+            </h3>
+            <p>
+                1. Click "Start Recording"<br>
+                2. Select screen, window, or tab<br>
+                3. Recorder minimizes automatically<br>
+                4. Record your content<br>
+                5. Click recorder in taskbar to stop
+            </p>
+        </section>
+
+        <section class="info-card tip" aria-labelledby="pro-tip">
+            <h3 id="pro-tip">
+                <span aria-hidden="true">💡</span>
+                Pro Tip
+            </h3>
+            <p>
+                Recording stops instantly when you click the recorder window in your taskbar. No need to find the stop button!
+            </p>
+        </section>
+    </main>
+
+    <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+bun.lockb
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build outputs
+dist/
+releases/
+build/
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+.cache/

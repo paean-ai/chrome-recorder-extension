@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Screen Recorder</title>
+    <style>
+        /* CSS Custom Properties - Design System */
+        :root {
+            /* Colors - Material 3 Expressive */
+            --primary: #6750A4;
+            --primary-container: #EADDFF;
+            --on-primary: #FFFFFF;
+            --on-primary-container: #21005D;
+            --surface: #FEF7FF;
+            --surface-variant: #E7E0EC;
+            --on-surface: #1D1B20;
+            --on-surface-variant: #49454F;
+            --outline: #79747E;
+            --outline-variant: #CAC4D0;
+            --background: #FEF7FF;
+            --on-background: #1D1B20;
+            --error: #BA1A1A;
+            --error-container: #FFDAD6;
+            --on-error: #FFFFFF;
+            --success: #146C2E;
+            --success-container: #E8F5E9;
+            --warning: #7D5700;
+            --warning-container: #FFF8E1;
+            
+            /* Typography */
+            --font-family: 'Roboto', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            --font-weight-medium: 500;
+            --font-weight-semibold: 600;
+            --font-weight-bold: 700;
+            
+            /* Spacing */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            
+            /* Border Radius */
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+            --radius-full: 50%;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+            --shadow-md: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+            --shadow-lg: 0 10px 20px rgba(0, 0, 0, 0.19), 0 6px 6px rgba(0, 0, 0, 0.23);
+            
+            /* Transitions */
+            --transition-fast: 150ms cubic-bezier(0.4, 0.0, 0.2, 1);
+            --transition-normal: 300ms cubic-bezier(0.4, 0.0, 0.2, 1);
+            --transition-slow: 500ms cubic-bezier(0.4, 0.0, 0.2, 1);
+        }
+
+        /* Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            width: 380px;
+            height: 420px;
+            font-family: var(--font-family);
+            background: var(--background);
+            color: var(--on-background);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: var(--spacing-lg);
+        }
+
+        /* Main Container */
+        .container {
+            background: var(--surface);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            width: 100%;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--outline-variant);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: var(--font-weight-bold);
+            color: var(--primary);
+            margin-bottom: var(--spacing-xs);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+        }
+
+        /* Status Badge */
+        .status-badge {
+            text-align: center;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--radius-xl);
+            font-size: 14px;
+            font-weight: var(--font-weight-semibold);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            transition: all var(--transition-normal);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .status-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+
+        .status-badge.recording::before {
+            left: 100%;
+        }
+
+        .status-idle {
+            background: var(--success-container);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .status-recording {
+            background: var(--warning-container);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+            animation: pulse 2s infinite;
+        }
+
+        .status-error {
+            background: var(--error-container);
+            color: var(--error);
+            border: 1px solid var(--error);
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.8;
+                transform: scale(1.02);
+            }
+        }
+
+        /* Recording Indicator */
+        .recording-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+        }
+
+        .recording-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--error);
+            border-radius: var(--radius-full);
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* Settings Section */
+        .settings-section {
+            background: var(--surface-variant);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            border: 1px solid var(--outline-variant);
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: var(--spacing-md);
+        }
+
+        .setting-label {
+            font-size: 14px;
+            font-weight: var(--font-weight-medium);
+            color: var(--on-surface);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            width: 52px;
+            height: 28px;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--outline);
+            transition: all var(--transition-normal);
+            border-radius: var(--radius-full);
+            border: 2px solid var(--outline);
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 2px;
+            bottom: 2px;
+            background-color: var(--surface);
+            transition: all var(--transition-normal);
+            border-radius: var(--radius-full);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: var(--primary);
+            border-color: var(--primary);
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+        .toggle-switch input:focus + .toggle-slider {
+            outline: 2px solid var(--outline);
+            outline-offset: 2px;
+        }
+
+        /* Button Group */
+        .button-group {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .control-button {
+            flex: 1;
+            height: 56px;
+            font-weight: var(--font-weight-semibold);
+            border: none;
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            font-size: 16px;
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .control-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .control-button:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .control-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .control-button:focus-visible {
+            outline: 2px solid var(--outline);
+            outline-offset: 2px;
+        }
+
+        .control-button.record {
+            background: var(--error);
+            color: var(--on-error);
+        }
+
+        .control-button.record:hover:not(:disabled) {
+            background: color-mix(in srgb, var(--error) 85%, black);
+        }
+
+        .control-button.stop {
+            background: var(--on-surface);
+            color: var(--surface);
+        }
+
+        .control-button.stop:hover:not(:disabled) {
+            background: color-mix(in srgb, var(--on-surface) 85%, black);
+        }
+
+        /* Ripple Effect */
+        .control-button::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .control-button:active::after {
+            width: 300px;
+            height: 300px;
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .container > * {
+            animation: slideIn var(--transition-normal) ease-out;
+            animation-fill-mode: both;
+        }
+
+        .container > *:nth-child(1) { animation-delay: 0ms; }
+        .container > *:nth-child(2) { animation-delay: 100ms; }
+        .container > *:nth-child(3) { animation-delay: 200ms; }
+        .container > *:nth-child(4) { animation-delay: 300ms; }
+
+        /* Screen Reader Only */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Accessibility */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --primary: #D0BCFF;
+                --primary-container: #4F378B;
+                --on-primary: #381E72;
+                --on-primary-container: #EADDFF;
+                --surface: #121212;
+                --surface-variant: #2C2C2C;
+                --on-surface: #E6E1E5;
+                --on-surface-variant: #CAC4D0;
+                --outline: #938F99;
+                --outline-variant: #2C2C2C;
+                --background: #121212;
+                --on-background: #E6E1E5;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="container" role="dialog" aria-modal="true" aria-label="Screen Recorder Controls">
+        <header class="header">
+            <h1>
+                <span aria-hidden="true">🎥</span>
+                Screen Recorder
+            </h1>
+        </header>
+
+        <div id="status" class="status-badge status-idle" role="status" aria-live="polite">
+            <span id="statusText">Ready to Record</span>
+        </div>
+
+        <section class="settings-section" aria-labelledby="settings-title">
+            <div class="setting-item">
+                <label for="autoSaveToggle" class="setting-label">
+                    <span aria-hidden="true">💾</span>
+                    Auto-Save
+                </label>
+                <div class="toggle-switch">
+                    <input type="checkbox" id="autoSaveToggle" checked aria-describedby="auto-save-desc">
+                    <span class="toggle-slider"></span>
+                </div>
+            </div>
+            <p id="auto-save-desc" class="sr-only">Automatically save recordings to Downloads folder</p>
+        </section>
+
+        <div class="button-group" role="group" aria-label="Recording controls">
+            <button 
+                id="rec" 
+                class="control-button record"
+                aria-label="Start recording"
+                type="button"
+            >
+                <span aria-hidden="true">🔴</span>
+                REC
+            </button>
+            <button 
+                id="stop" 
+                class="control-button stop"
+                aria-label="Stop recording"
+                disabled
+                type="button"
+            >
+                <span aria-hidden="true">⏹</span>
+                STOP
+            </button>
+        </div>
+    </main>
+
+    <script src="recorder.js"></script>
+</body>
+</html>

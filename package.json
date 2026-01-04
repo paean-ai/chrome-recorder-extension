@@ -1,0 +1,44 @@
+{
+  "name": "screen-recorder-extension",
+  "version": "1.4.0",
+  "description": "A modern, professional screen recording Chrome extension with Material 3 Expressive design.",
+  "main": "index.js",
+  "scripts": {
+    "build": "bun run clean && bun run build:dev",
+    "build:dev": "node build/copy.js",
+    "build:prod": "bun run clean && node build/copy.js --minify",
+    "package": "bun run build:prod && node build/package.js",
+    "clean": "node build/clean.js",
+    "dev": "bun run build:dev && bun run watch",
+    "watch": "node build/watch.js",
+    "test": "echo 'No automated tests yet - run manual testing checklist'",
+    "lint": "echo 'Linting not configured yet'",
+    "prepare": "bun run build"
+  },
+  "keywords": [
+    "chrome-extension",
+    "screen-recorder",
+    "screen-capture",
+    "video-recording",
+    "material-design"
+  ],
+  "author": "Paean AI",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/paean-ai/chrome-recorder-extension.git"
+  },
+  "bugs": {
+    "url": "https://github.com/paean-ai/chrome-recorder-extension/issues"
+  },
+  "homepage": "https://github.com/paean-ai/chrome-recorder-extension#readme",
+  "devDependencies": {
+    "chokidar": "^3.5.3",
+    "fs-extra": "^11.1.1",
+    "zip-a-folder": "^1.1.5"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "bun": ">=1.0.0"
+  }
+}
