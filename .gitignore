@@ -16,7 +16,6 @@ Thumbs.db
 # Build outputs
 dist/
 releases/
-build/
 
 # Logs
 *.log
